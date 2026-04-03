@@ -21,9 +21,10 @@ app.use(cors());
 
 // 🚀 3. Create the HTTP Server and attach Socket.io
 const server = http.createServer(app);
+const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173", // Your Frontend URL
+    origin: FRONTEND_URL,
     methods: ["GET", "POST", "PATCH"]
   }
 });
