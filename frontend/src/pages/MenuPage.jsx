@@ -6,7 +6,7 @@ import OrderSidebar from '../components/OrderSidebar.jsx';
 import { useAuth0 } from "@auth0/auth0-react";
 import { useParams, useSearchParams } from 'react-router-dom'; // 🚀 1. Add useSearchParams
 import { io } from "socket.io-client"; // 🚀 2. Import Socket
-const BASE_URL = import.meta.env.VITE_API_URL;
+const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 const MenuPage = () => {
   // const socket = io("http://localhost:5000");
   const socketRef = useRef(null);

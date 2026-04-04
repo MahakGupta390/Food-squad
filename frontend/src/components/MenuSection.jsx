@@ -1,6 +1,6 @@
 import React, { useState,useEffect } from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
-const BASE_URL = import.meta.env.VITE_API_URL;
+const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 // const { user, getAccessTokenSilently } = useAuth0();
 
 const MenuSection = ({ items, orderId, onUpdateOrder,onCreateOrder }) => {
