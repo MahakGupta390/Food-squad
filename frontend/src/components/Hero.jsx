@@ -1,5 +1,5 @@
 import React from "react";
-import heroImg from "../assets/Pizza sharing-pana.png";
+import heroImg from "../assets/Pizza-sharing-pana.png";
 import { useNavigate } from "react-router-dom";
 
 function Hero() {
