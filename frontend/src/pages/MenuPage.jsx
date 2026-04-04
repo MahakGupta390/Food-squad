@@ -21,13 +21,16 @@ const navigate = useNavigate();
 
 
    useEffect(() => {
-    socketRef.current = io(BASE_URL);
+  if (typeof window !== "undefined" && !socketRef.current) {
+    socketRef.current = io(BASE_URL, {
+      transports: ["websocket"], // avoids polling issues
+    });
+  }
 
-    return () => {
-      socketRef.current.disconnect();
-    };
-  }, []);
-
+  return () => {
+    socketRef.current?.disconnect();
+  };
+}, []);
 
   useEffect(() => {
   const idFromUrl = searchParams.get("orderId");
@@ -57,12 +60,12 @@ const navigate = useNavigate();
         setOrder(initialOrder);
         
         // 4. Connect Sockets immediately after finding the order
-        socketRef.current.emit("join-order", initialOrder._id);
+     socketRef.current?.emit("join-order", initialOrder._id);
 
-          socketRef.current.on("orderUpdated", (updatedOrder) => {
-            setOrder(updatedOrder);
-          });
-        }
+         socketRef.current?.off("orderUpdated"); // remove old
+socketRef.current?.on("orderUpdated", (updatedOrder) => {
+  setOrder(updatedOrder);
+})}
 
     } catch (error) {
       console.error("Initialization failed:", error);
