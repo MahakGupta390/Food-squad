@@ -53,6 +53,8 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/split", splitRoutes);
 
 // 🚀 6. Change app.listen to server.listen
-server.listen(5000, () => {
-  console.log("Server is running on port 5000 with WebSockets enabled");
+const PORT = process.env.PORT || 5000;
+
+server.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT} with WebSockets enabled`);
 });
