@@ -5,7 +5,7 @@ const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 const MenuSection = ({ items, orderId, onUpdateOrder,onCreateOrder }) => {
   const [addingItem, setAddingItem] = useState(null); // Track which item is currently being saved
-  const { user, getAccessTokenSilently } = useAuth0();
+  const { user, isAuthenticated, isLoading,getAccessTokenSilently } = useAuth0();
 
   useEffect(() => {
   const fetchOrder = async () => {
@@ -31,10 +31,24 @@ const MenuSection = ({ items, orderId, onUpdateOrder,onCreateOrder }) => {
 
   const handleAddItem = async (item) => {
     // 1. Ensure user is present before doing anything
-    const token = await getAccessTokenSilently();
-    if (!user?.sub) {
-        alert("Please log in first!");
-        return;
+      if (isLoading) {
+      console.log("Auth still loading...");
+      return;
+    }
+
+    // 🛑 Ensure user is authenticated
+    if (!isAuthenticated || !user?.sub) {
+      alert("Please log in first!");
+      return;
+    }
+     let token;
+    try {
+      // ✅ Get token AFTER auth check
+      token = await getAccessTokenSilently();
+    } catch (err) {
+      console.error("Token error:", err);
+      alert("Authentication error. Please login again.");
+      return;
     }
 
     setAddingItem(item.name);
@@ -80,6 +94,10 @@ const MenuSection = ({ items, orderId, onUpdateOrder,onCreateOrder }) => {
         setAddingItem(null);
     }
 };
+ if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between border-b border-slate-100 pb-4">
