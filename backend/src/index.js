@@ -17,7 +17,10 @@ mongoose.connect(process.env.MONGO_CONNECT_STRING)
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: process.env.FRONTEND_URL,
+  credentials: true
+}));
 
 // 🚀 3. Create the HTTP Server and attach Socket.io
 const server = http.createServer(app);
