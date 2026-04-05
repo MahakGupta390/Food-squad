@@ -5,7 +5,7 @@ import BarbequeNation from "../assets/Barbeque.webp";
 import WowMomo from "../assets/MOMO.jpg";
 import Biryani from "../assets/Biryani.jpeg";
 import CafeCoffeeDay from "../assets/Coffee.webp";
-import Burger from "../assets/Burger-King.webp";
+import Burger from "../assets/Burger-king.webp";
 import McD from "../assets/McD.webp";
 import Haldiram from "../assets/Haldiram.webp";
 import Subway from "../assets/Subway.webp";
