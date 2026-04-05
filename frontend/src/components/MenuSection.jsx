@@ -61,7 +61,10 @@ const MenuSection = ({ items, orderId, onUpdateOrder,onCreateOrder }) => {
             console.log("No Order ID found, creating new order...");
             const newOrder = await onCreateOrder(); 
             // Check if the returned object has the ID (sometimes it's result.data._id)
-            currentOrderId = newOrder?._id || newOrder?.order?._id; 
+            currentOrderId = newOrder?._id;
+            if (!currentOrderId) {
+    throw new Error("Order ID missing after creation");
+  }
         }
         console.log("Current Order ID:", currentOrderId);
 

@@ -10,7 +10,7 @@ const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 const MenuPage = () => {
   // const socket = io("http://localhost:5000");
   const socketRef = useRef(null);
-const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
+const { user, isAuthenticated,isLoading, getAccessTokenSilently } = useAuth0();
 const navigate = useNavigate();
   const { restaurantId } = useParams();
  const [searchParams, setSearchParams] = useSearchParams();
@@ -33,47 +33,63 @@ const navigate = useNavigate();
 }, []);
 
   useEffect(() => {
+  
+    if (isLoading) return; 
   const idFromUrl = searchParams.get("orderId");
 
   const initializeData = async () => {
-    setLoading(true);
-    try {
-      // 1. Always fetch Restaurant details (Menu, Name, etc.)
-      const res = await fetch(`${BASE_URL}/api/restaurants/${restaurantId}`);
-      const restaurantData = await res.json();
-      setRestaurant(restaurantData);
+  setLoading(true);
 
-      // 2. Determine which Order to load
-      let initialOrder = null;
+  try {
+    // 1. Fetch Restaurant
+    const res = await fetch(`${BASE_URL}/api/restaurants/${restaurantId}`);
+    const restaurantData = await res.json();
+    setRestaurant(restaurantData);
 
-      if (idFromUrl) {
-        // CASE: Landing from Invite Link or Refreshing with an active session
-        console.log("Syncing with Order from URL:", idFromUrl);
-        const orderRes = await fetch(`${BASE_URL}/api/orders/${idFromUrl}`);
-        if (orderRes.ok) {
-          initialOrder = await orderRes.json();
-        }
-      } 
+    let initialOrder = null;
 
-      // 3. Set the state once
-      if (initialOrder) {
-        setOrder(initialOrder);
-        
-        // 4. Connect Sockets immediately after finding the order
-     socketRef.current?.emit("join-order", initialOrder._id);
+    // 2. CASE 1: Order from URL
+    if (idFromUrl) {
+      console.log("Syncing with Order from URL:", idFromUrl);
 
-         socketRef.current?.off("orderUpdated"); // remove old
-socketRef.current?.on("orderUpdated", (updatedOrder) => {
-  setOrder(updatedOrder);
-})}
-
-    } catch (error) {
-      console.error("Initialization failed:", error);
-    } finally {
-      setLoading(false);
+      const orderRes = await fetch(`${BASE_URL}/api/orders/${idFromUrl}`);
+      if (orderRes.ok) {
+        initialOrder = await orderRes.json();
+      }
     }
-  };
 
+    // 3. CASE 2: Active order (ONLY if logged in and no URL order)
+    else if (isAuthenticated && user?.sub) {
+      console.log("Fetching active order for user:", user.sub);
+
+      const orderRes = await fetch(
+        `${BASE_URL}/api/orders/active?restaurantId=${restaurantId}&userId=${user.sub}`
+      );
+
+      if (orderRes.ok && orderRes.status !== 204) {
+        initialOrder = await orderRes.json();
+      }
+    }
+
+    // 4. Set order ONCE (no overwrite)
+    if (initialOrder) {
+      setOrder(initialOrder);
+
+      // Socket join
+      socketRef.current?.emit("join-order", initialOrder._id);
+
+      socketRef.current?.off("orderUpdated");
+      socketRef.current?.on("orderUpdated", (updatedOrder) => {
+        setOrder(updatedOrder);
+      });
+    }
+
+  } catch (error) {
+    console.error("Initialization failed:", error);
+  } finally {
+    setLoading(false);
+  }
+};
   if (restaurantId) initializeData();
 
   // CLEANUP: Disconnect socket listener when component unmounts
@@ -81,7 +97,7 @@ socketRef.current?.on("orderUpdated", (updatedOrder) => {
     socketRef.current?.off("orderUpdated");
       socketRef.current?.off("orderFinalized");
   };
-}, [restaurantId, searchParams,navigate]); // 🚀 Re-run only if restaurant changes or URL ID changes
+},[restaurantId, searchParams, isLoading, isAuthenticated, user]); // 🚀 Re-run only if restaurant changes or URL ID changes
   // --- NEW: FUNCTION TO CREATE ORDER ---
   const handleCreateOrder = async () => {
   try {
@@ -122,37 +138,37 @@ socketRef.current?.on("orderUpdated", (updatedOrder) => {
     setOrder(newOrder); // When an item is added, the Sidebar refreshes automatically
   };
 
- useEffect(() => {
-  const fetchMenuAndOrder = async () => {
-    try {
-      setLoading(true);
+//  useEffect(() => {
+//   const fetchMenuAndOrder = async () => {
+//     try {
+//       setLoading(true);
 
-      // 1. Fetch Restaurant
-      const resResponse = await fetch(`${BASE_URL}/api/restaurants/${restaurantId}`);
-      const resData = await resResponse.json();
-      setRestaurant(resData);
+//       // 1. Fetch Restaurant
+//       const resResponse = await fetch(`${BASE_URL}/api/restaurants/${restaurantId}`);
+//       const resData = await resResponse.json();
+//       setRestaurant(resData);
 
-      // 2. Fetch Active Order using userId from Auth0 state
-      if (user?.sub) {
-        // 🚀 Pass userId in the URL directly
-        const orderResponse = await fetch(
-          `${BASE_URL}/api/orders/active?restaurantId=${restaurantId}&userId=${user.sub}`
-        );
+//       // 2. Fetch Active Order using userId from Auth0 state
+//       if (user?.sub) {
+//         // 🚀 Pass userId in the URL directly
+//         const orderResponse = await fetch(
+//           `${BASE_URL}/api/orders/active?restaurantId=${restaurantId}&userId=${user.sub}`
+//         );
 
-        if (orderResponse.ok && orderResponse.status !== 204) {
-          const orderData = await orderResponse.json();
-          setOrder(orderData);
-        }
-      }
-    } catch (error) {
-      console.error("Error loading menu page:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+//         if (orderResponse.ok && orderResponse.status !== 204) {
+//           const orderData = await orderResponse.json();
+//           setOrder(orderData);
+//         }
+//       }
+//     } catch (error) {
+//       console.error("Error loading menu page:", error);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
 
-  if (restaurantId && user) fetchMenuAndOrder();
-}, [restaurantId, user]); // Re-run when user logs in
+//   if (restaurantId && user) fetchMenuAndOrder();
+// }, [restaurantId, user]); // Re-run when user logs in
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
