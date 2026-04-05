@@ -22,6 +22,7 @@ const restaurantImages = {
   "Haldiram's": Haldiram,
   "Subway": Subway,
 };
+// const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 // ── Shimmer Skeleton Card ──
 const SkeletonCard = () => (
@@ -116,9 +117,10 @@ const RestaurantGallery = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
     const fetchRestaurants = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/restaurants");
+        const res = await fetch(`${BASE_URL}/api/restaurants`);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
 
