@@ -6,7 +6,7 @@ const Auth0ProviderWithNavigate = ({ children }) => {
 
   const domain = "dev-jo6xlkffyi568b1u.us.auth0.com";
   const clientId = "ug1YVU0GOG9azexqKGYk6J3ew1VrKF8G";
-  const redirectUri = "http://localhost:5173/";
+  const redirect_uri = window.location.origin;
    const audience = "https://food-ordering-system";
   const onRedirectCallback = (appState) => {
     // Redirects user to the page they intended to visit, or the home page
