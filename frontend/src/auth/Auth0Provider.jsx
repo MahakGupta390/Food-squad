@@ -10,7 +10,7 @@ const Auth0ProviderWithNavigate = ({ children }) => {
    const audience = "https://food-ordering-system";
   const onRedirectCallback = (appState) => {
     // Redirects user to the page they intended to visit, or the home page
-   navigate(appState?.returnTo || window.location.pathname);
+   navigate(appState?.returnTo || "/auth-callback");
   };
 
   if (!(domain && clientId && redirectUri)) {
