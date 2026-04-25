@@ -9,12 +9,15 @@ const JoinOrderPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (isLoading) return;
     const processJoin = async () => {
-      if (isLoading) return;
 
       // 1. If not logged in, go to Auth0
       if (!isAuthenticated) {
-        loginWithRedirect({
+        await loginWithRedirect({
+           authorizationParams: {
+    audience: "https://food-ordering-system",
+  },
           appState: { returnTo: window.location.pathname } 
         });
         return;
@@ -46,6 +49,7 @@ const JoinOrderPage = () => {
 
     processJoin();
   }, [isAuthenticated, isLoading, orderId, restaurantId]);
+  console.log({ isLoading, isAuthenticated });
 
   return (
     <div className="flex flex-col h-screen items-center justify-center bg-slate-50">
