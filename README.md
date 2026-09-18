@@ -53,7 +53,7 @@ npm install
 
 Create a .env file in the backend folder:
 
-MONGO_CONNECT_STRING="mongodb+srv://guptamahak364_db_user:NlkfeFnjeFloYnYC@food-order.uwj0snj.mongodb.net/?appName=Food-order"
+MONGO_CONNECT_STRING="mongodb+srv://<username>:<password>@food-order.uwj0snj.mongodb.net/?appName=Food-order"
 #auth0
 AUTH0_AUDIENCE=https://food-ordering-system
 AUTH0_ISSUER_BASE_URL=https://dev-jo6xlkffyi568b1u.us.auth0.com/
