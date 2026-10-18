@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <defs>
+    <linearGradient id="tileGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#EB5E28"/>
+      <stop offset="100%" stop-color="#D63B6F"/>
+    </linearGradient>
+  </defs>
+  <!-- Rounded tile -->
+  <rect width="32" height="32" rx="9" fill="url(#tileGrad)"/>
+  
+  <!-- Squad Plate / Round Table Dot in top gap -->
+  <circle cx="16" cy="6.2" r="1.6" fill="#FFFFFF"/>
+  
+  <!-- Crossed Fork & Knife (solid white, geometric, ~38° diagonal) -->
+  <g stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Knife: Top-Right to Bottom-Left -->
+    <!-- Handle -->
+    <line x1="16" y1="17" x2="8.5" y2="25" stroke-width="2.3"/>
+    <!-- Blade: Sleek curved cutting profile -->
+    <path d="M16 17 L22 10.5 C23.5 8.8 24.8 10 23.6 11.6 L18 18 Z" fill="#FFFFFF" stroke-width="0.6"/>
+
+    <!-- Fork: Top-Left to Bottom-Right -->
+    <!-- Handle -->
+    <line x1="16" y1="17" x2="23.5" y2="25" stroke-width="2.3"/>
+    <!-- Stem -->
+    <line x1="16" y1="17" x2="12.5" y2="13.2" stroke-width="2.3"/>
+    <!-- 3 Tines -->
+    <line x1="8.5" y1="8.5" x2="11" y2="11.2" stroke-width="1.8"/>
+    <line x1="10.4" y1="6.8" x2="12.7" y2="9.3" stroke-width="1.8"/>
+    <line x1="12.3" y1="5.1" x2="14.6" y2="7.6" stroke-width="1.8"/>
+    <!-- Fork base bridge -->
+    <line x1="9.6" y1="10.2" x2="13.8" y2="6.6" stroke-width="1.8"/>
+  </g>
+</svg>
