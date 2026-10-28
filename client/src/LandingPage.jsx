@@ -22,6 +22,7 @@ import {
   X as CloseXIcon
 } from 'lucide-react';
 import './landing.css';
+import { getUser } from './api.js';
 
 /* ── Custom Brand Logo Glyph: Crossed Fork & Knife with Squad Dot on Gradient Tile ── */
 const CrossedUtensilsGlyph = () => (
@@ -147,6 +148,8 @@ function useScrollReveal() {
    MAIN LANDING COMPONENT
    ══════════════════════════════════════════ */
 export default function LandingPage({ onEnterApp }) {
+  const currentUser = getUser();
+  const [landingRoomCode, setLandingRoomCode] = useState('');
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -202,10 +205,17 @@ export default function LandingPage({ onEnterApp }) {
           </ul>
 
           <div className="lp-nav-actions">
-            <button className="lp-btn-primary" onClick={onEnterApp}>
-              <span>Sign In</span>
-              <ArrowRight size={15} strokeWidth={2} />
-            </button>
+            {currentUser ? (
+              <button className="lp-btn-primary" onClick={() => onEnterApp('dashboard')}>
+                <span>{currentUser.name} (Dashboard)</span>
+                <ArrowRight size={15} strokeWidth={2} />
+              </button>
+            ) : (
+              <button className="lp-btn-primary" onClick={() => onEnterApp('signin')}>
+                <span>Sign In</span>
+                <ArrowRight size={15} strokeWidth={2} />
+              </button>
+            )}
             <button
               className="lp-mobile-toggle"
               onClick={() => setMobileOpen(!mobileOpen)}
@@ -256,8 +266,12 @@ export default function LandingPage({ onEnterApp }) {
               </a>
             </nav>
             <div className="lp-drawer-actions">
-              <button className="lp-btn-primary" style={{ width: '100%' }} onClick={onEnterApp}>
-                <span>Sign In</span>
+              <button
+                className="lp-btn-primary"
+                style={{ width: '100%' }}
+                onClick={() => onEnterApp(currentUser ? 'dashboard' : 'signin')}
+              >
+                <span>{currentUser ? `${currentUser.name} (Dashboard)` : 'Sign In'}</span>
                 <ArrowRight size={15} strokeWidth={2} />
               </button>
             </div>
@@ -280,22 +294,58 @@ export default function LandingPage({ onEnterApp }) {
               Pick a restaurant with your squad, everyone adds their cravings, and the bill splits itself — down to the last naan.
             </p>
 
-            <div className="lp-hero-ctas lp-animate-hero-ctas">
-              <button className="lp-btn-hero" onClick={onEnterApp}>
-                <span>Start a squad</span>
-                <ArrowRight size={18} strokeWidth={2.2} className="lp-btn-arrow" />
-              </button>
-              <a
-                href="#how-it-works"
-                className="lp-hero-link"
-                onClick={(e) => {
+            <div className="lp-hero-ctas lp-animate-hero-ctas" style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
+                <button className="lp-btn-hero" onClick={() => onEnterApp(currentUser ? 'restaurants' : 'start')}>
+                  <span>{currentUser ? 'Start a squad' : 'Launch FoodSquad'}</span>
+                  <ArrowRight size={18} strokeWidth={2.2} className="lp-btn-arrow" />
+                </button>
+              </div>
+
+              {/* Quick Join Room Input on Landing Page */}
+              <form
+                onSubmit={(e) => {
                   e.preventDefault();
-                  scrollToSection('how-it-works');
+                  if (landingRoomCode.trim()) onEnterApp('join', landingRoomCode.trim());
+                }}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                  padding: '5px 8px 5px 14px',
+                  borderRadius: '999px',
+                  boxShadow: '0 4px 14px rgba(0,0,0,0.06)',
+                  maxWidth: 380,
+                  width: '100%',
+                  border: '1px solid #E5E7EB'
                 }}
               >
-                <span>See how it works</span>
-                <ChevronDown size={16} strokeWidth={2.2} className="lp-icon-down" />
-              </a>
+                <Users size={16} color="#D9480F" />
+                <input
+                  type="text"
+                  placeholder="Have an invite code? (e.g. BBQ-4821)"
+                  value={landingRoomCode}
+                  onChange={(e) => setLandingRoomCode(e.target.value)}
+                  style={{
+                    border: 'none',
+                    outline: 'none',
+                    background: 'transparent',
+                    fontSize: '0.82rem',
+                    fontWeight: 600,
+                    flex: 1,
+                    color: '#12161A'
+                  }}
+                />
+                <button
+                  type="submit"
+                  className="btn btn-sm btn-primary"
+                  style={{ borderRadius: '999px', padding: '4px 14px', fontSize: '0.78rem' }}
+                  disabled={!landingRoomCode.trim()}
+                >
+                  Join
+                </button>
+              </form>
             </div>
           </div>
 

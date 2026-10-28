@@ -2,11 +2,11 @@
   "name": "foodsquad",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"npm:server\" \"npm:client\"",
-    "server": "node server/index.js",
-    "client": "npm --prefix client run dev",
-    "install:all": "npm install && npm --prefix client install"
-  },
+  "dev": "concurrently \"npm:server\" \"npm:client\"",
+  "server": "npm --prefix server run dev",
+  "client": "npm --prefix client run dev",
+  "install:all": "npm install && npm --prefix server install && npm --prefix client install"
+},
   "dependencies": { "cors": "^2.8.5", "express": "^4.19.2" },
   "devDependencies": { "concurrently": "^8.2.2" }
 }
