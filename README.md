@@ -8,7 +8,7 @@ FoodSquad is a full-stack web application that enables users to order food colla
 
 - 👥 **Group Ordering** – Create a session and invite friends via shareable link  
 - 💸 **Dynamic Bill Splitting** – Automatically split bills among participants  
-- 🔐 **Authentication & Security** – Secure login using Auth0  
+- 🔐 ** Authentication & Security** – Secure login using Auth0   
 - ⚡ **Real-time Collaboration** – Seamless updates using Socket.IO  
 - 📱 **Responsive UI** – Optimized for all devices using Tailwind CSS  
 
