@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <defs>
+    <radialGradient id="bbqBg" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#C53030"/>
+      <stop offset="70%" stop-color="#822020"/>
+      <stop offset="100%" stop-color="#4A1010"/>
+    </radialGradient>
+    <linearGradient id="skewerGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFD700"/>
+      <stop offset="100%" stop-color="#FF8C00"/>
+    </linearGradient>
+  </defs>
+  <circle cx="50" cy="50" r="48" fill="url(#bbqBg)" stroke="#FFB020" stroke-width="2.5"/>
+  <circle cx="50" cy="50" r="44" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1" stroke-dasharray="2,3"/>
+  <!-- Grill Skewer & Flames -->
+  <path d="M50 20 C43 28, 40 36, 45 42 C42 40, 39 37, 39 34 C36 40, 38 48, 44 52 C39 52, 36 50, 35 48 C34 54, 38 62, 50 64 C62 62, 66 54, 65 48 C64 50, 61 52, 56 52 C62 48, 64 40, 61 34 C61 37, 58 40, 55 42 C60 36, 57 28, 50 20 Z" fill="url(#skewerGold)"/>
+  <!-- Skewer bar -->
+  <line x1="28" y1="58" x2="72" y2="58" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Tikka cubes on skewer -->
+  <rect x="34" y="53" width="9" height="10" rx="2" fill="#E65100"/>
+  <rect x="46" y="52" width="10" height="12" rx="2" fill="#EF6C00"/>
+  <rect x="58" y="53" width="9" height="10" rx="2" fill="#E65100"/>
+  <text x="50" y="78" font-family="'Plus Jakarta Sans', sans-serif" font-weight="900" font-size="7.5" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">BARBEQUE</text>
+  <text x="50" y="86" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="6" fill="#FFD700" text-anchor="middle" letter-spacing="1.5">NATION</text>
+</svg>

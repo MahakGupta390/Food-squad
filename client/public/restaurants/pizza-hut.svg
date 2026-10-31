@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <defs>
+    <radialGradient id="pztBg" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#EE2726"/>
+      <stop offset="70%" stop-color="#C8102E"/>
+      <stop offset="100%" stop-color="#8A0012"/>
+    </radialGradient>
+  </defs>
+  <circle cx="50" cy="50" r="48" fill="url(#pztBg)" stroke="#FFD100" stroke-width="2.5"/>
+  <circle cx="50" cy="50" r="44" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+  <!-- Iconic Pizza Hut Roof Silhouette -->
+  <path d="M22 42 C30 40, 42 32, 50 32 C58 32, 70 40, 78 42 L82 48 L18 48 Z" fill="#FFD100"/>
+  <path d="M26 48 L74 48 L71 52 L29 52 Z" fill="#000000" opacity="0.3"/>
+  <text x="50" y="68" font-family="'Plus Jakarta Sans', sans-serif" font-weight="900" font-size="9" fill="#FFFFFF" text-anchor="middle" letter-spacing="0.5">PIZZA</text>
+  <text x="50" y="80" font-family="'Plus Jakarta Sans', sans-serif" font-weight="900" font-size="9" fill="#FFD100" text-anchor="middle" letter-spacing="1">HUT</text>
+</svg>
