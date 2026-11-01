@@ -12,14 +12,43 @@ import { seedRestaurants } from './seed/seed.js';
 
 const app = express();
 app.set('trust proxy', 1); // Render sits behind a proxy
-app.use(cors({ origin: config.clientOrigins, credentials: true }));
+
+// Dynamic CORS configuration handling normalized origins & preflight
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps, curl, or server-to-server)
+    if (!origin) return callback(null, true);
+
+    const normalizedOrigin = origin.replace(/\/+$/, '');
+    if (config.clientOrigins.includes(normalizedOrigin)) {
+      callback(null, true);
+    } else {
+      callback(new Error(`CORS policy blocked request from origin: ${origin}`));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+};
+
+// Enable CORS middleware and handle HTTP OPTIONS preflight explicitly
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
+
 app.use(express.json({ limit: '50kb' }));
 app.use('/api', api);
 app.use((_req, res) => res.status(404).json({ error: 'Not found' }));
 app.use(errorHandler);
 
 const server = http.createServer(app);
-const io = new Server(server, { cors: { origin: config.clientOrigins } });
+
+// Socket.IO configuration sharing the same CORS rules
+const io = new Server(server, {
+  cors: {
+    origin: config.clientOrigins,
+    credentials: true,
+  },
+});
 app.set('io', io);
 
 // Sockets only carry a "something changed, refetch" ping; state itself always comes from the API.
@@ -31,6 +60,7 @@ io.use((socket, next) => {
     next(new Error('unauthorized'));
   }
 });
+
 io.on('connection', (socket) => {
   socket.on('join-room', async (code, ack) => {
     const roomCode = String(code || '').toUpperCase();
@@ -64,4 +94,3 @@ main().catch((err) => {
   console.error('Startup failed:', err.message);
   process.exit(1);
 });
-
