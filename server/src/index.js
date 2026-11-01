@@ -31,9 +31,8 @@ const corsOptions = {
   allowedHeaders: ['Content-Type', 'Authorization'],
 };
 
-// Enable CORS middleware and handle HTTP OPTIONS preflight explicitly
+// Enable CORS middleware (handles route parsing and preflights automatically)
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions));
 
 app.use(express.json({ limit: '50kb' }));
 app.use('/api', api);
