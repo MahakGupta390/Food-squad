@@ -23,7 +23,8 @@ const corsOptions = {
     if (config.clientOrigins.includes(normalizedOrigin)) {
       callback(null, true);
     } else {
-      callback(new Error(`CORS policy blocked request from origin: ${origin}`));
+      console.warn(`Blocked by CORS: ${origin}`);
+      callback(null, false);
     }
   },
   credentials: true,
