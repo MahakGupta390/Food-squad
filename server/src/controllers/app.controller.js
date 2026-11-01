@@ -65,7 +65,10 @@ export async function getState(req, res) {
 /* ---------- rooms ---------- */
 
 export async function selectRestaurant(req, res) {
-  const targetId = req.body?.id || req.body?.slug || req.body?.restaurantId || '';
+  // Extract identifier regardless of whether the frontend sends id, slug, restaurantId, or code
+  const body = req.body || {};
+  const targetId = body.id || body.slug || body.restaurantId || body.code || '';
+  
   const restaurant = await getRestaurant(String(targetId));
   let room = await findActiveRoom(req.user, req.headers['x-room-code']);
   const reusable = room && room.status === 'open' && room.hostId.equals(req.user._id) && room.cart.length === 0;
@@ -80,7 +83,6 @@ export async function selectRestaurant(req, res) {
   }
   await send(req, res, room);
 }
-
 export async function join(req, res) {
   const room = await joinRoom(req.user, req.body?.code);
   await send(req, res, room);
