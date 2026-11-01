@@ -109,13 +109,12 @@ export const api = {
   getState: () => request('/state'),
 
   // Rooms
-  selectRestaurant: (id) => request('/restaurant/select', { method: 'POST', body: { id } }),
-  joinRoom: async (code) => {
-    const formatted = String(code || '').trim().toUpperCase();
-    setActiveRoom(formatted);
-    return request('/rooms/join', { method: 'POST', body: { code: formatted } });
-  },
-
+  selectRestaurant: (payload) => {
+  const id = typeof payload === 'string'
+    ? payload
+    : (payload?.id || payload?.slug || payload?._id || payload?.restaurantId || '');
+  return request('/restaurant/select', { method: 'POST', body: { id } });
+},
   // Preferences
   savePrefs: (prefs) => request('/prefs', { method: 'POST', body: prefs }),
 
