@@ -65,7 +65,8 @@ export async function getState(req, res) {
 /* ---------- rooms ---------- */
 
 export async function selectRestaurant(req, res) {
-  const restaurant = await getRestaurant(String(req.body?.id ?? ''));
+  const targetId = req.body?.id || req.body?.slug || req.body?.restaurantId || '';
+  const restaurant = await getRestaurant(String(targetId));
   let room = await findActiveRoom(req.user, req.headers['x-room-code']);
   const reusable = room && room.status === 'open' && room.hostId.equals(req.user._id) && room.cart.length === 0;
   if (reusable) {

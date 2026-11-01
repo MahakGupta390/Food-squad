@@ -1,4 +1,5 @@
 import crypto from 'node:crypto';
+import mongoose from 'mongoose';
 import { Room } from '../models/Room.js';
 import { Restaurant } from '../models/Restaurant.js';
 import { config } from '../config.js';
@@ -112,8 +113,17 @@ export async function requireActiveRoom(req) {
   return room;
 }
 
-export const getRestaurant = async (slug) => {
-  const r = await Restaurant.findOne({ slug }).lean();
+export const getRestaurant = async (identifier) => {
+  const query = String(identifier || '').trim();
+  if (!query) throw new HttpError(400, 'Restaurant identifier is required');
+
+  const isValidObjectId = mongoose.Types.ObjectId.isValid(query);
+  const r = await Restaurant.findOne(
+    isValidObjectId
+      ? { $or: [{ _id: query }, { slug: query.toLowerCase() }, { code: query.toUpperCase() }] }
+      : { $or: [{ slug: query.toLowerCase() }, { code: query.toUpperCase() }] }
+  ).lean();
+
   if (!r) throw new HttpError(404, 'Restaurant not found');
   return r;
 };
