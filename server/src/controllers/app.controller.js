@@ -65,13 +65,25 @@ export async function getState(req, res) {
 /* ---------- rooms ---------- */
 
 export async function selectRestaurant(req, res) {
-  // Extract identifier regardless of whether the frontend sends id, slug, restaurantId, or code
+  // Debug log to inspect incoming payload on Render
+  console.log('=== DEBUG POST /api/restaurant/select ===');
+  console.log('req.body:', JSON.stringify(req.body));
+  console.log('req.headers:', req.headers);
+  console.log('=========================================');
+
   const body = req.body || {};
-  const targetId = body.id || body.slug || body.restaurantId || body.code || '';
-  
+  const targetId =
+    body.id ||
+    body.slug ||
+    body.restaurantId ||
+    body.code ||
+    (typeof body.restaurant === 'string' ? body.restaurant : body.restaurant?.slug || body.restaurant?.id || body.restaurant?._id) ||
+    '';
+
   const restaurant = await getRestaurant(String(targetId));
   let room = await findActiveRoom(req.user, req.headers['x-room-code']);
   const reusable = room && room.status === 'open' && room.hostId.equals(req.user._id) && room.cart.length === 0;
+  
   if (reusable) {
     if (room.restaurantSlug !== restaurant.slug) {
       room = await mutateRoom(room.code, (r) => {
@@ -81,6 +93,7 @@ export async function selectRestaurant(req, res) {
   } else {
     room = await createRoom(req.user, restaurant);
   }
+  
   await send(req, res, room);
 }
 export async function join(req, res) {
