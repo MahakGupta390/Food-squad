@@ -108,13 +108,30 @@ export const api = {
   // State
   getState: () => request('/state'),
 
-  // Rooms
+    // Rooms
   selectRestaurant: (payload) => {
-  const id = typeof payload === 'string'
-    ? payload
-    : (payload?.id || payload?.slug || payload?._id || payload?.restaurantId || '');
-  return request('/restaurant/select', { method: 'POST', body: { id } });
-},
+    let id = '';
+    if (typeof payload === 'string') {
+      id = payload.trim();
+    } else if (payload && typeof payload === 'object') {
+      id = String(payload.id || payload.slug || payload.code || payload._id || payload.restaurantId || '').trim();
+    }
+
+    if (!id) {
+      console.error('selectRestaurant called without a valid identifier:', payload);
+      throw new Error('Please select a valid restaurant');
+    }
+
+    return request('/restaurant/select', { method: 'POST', body: { id } });
+  },
+
+  joinRoom: async (code) => {
+    const formatted = String(code || '').trim().toUpperCase();
+    setActiveRoom(formatted);
+    return request('/rooms/join', { method: 'POST', body: { code: formatted } });
+  },
+
+  // Preferences
   // Preferences
   savePrefs: (prefs) => request('/prefs', { method: 'POST', body: prefs }),
 

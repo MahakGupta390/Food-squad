@@ -13,8 +13,12 @@ const publicRestaurant = (r) => {
   const dishTags = [...new Set(menu.flatMap((m) => m.tags || []).filter(Boolean))];
   const menuSummary = menu.map((m) => `${m.name} ${m.category || ''} ${m.desc || ''}`).join(' ');
 
+  const resolvedId = String(r.slug || r.code || r._id || r.id || '').trim();
+
   return {
-    id: r.slug,
+    id: resolvedId,
+    slug: r.slug || resolvedId,
+    _id: r._id ? String(r._id) : undefined,
     name: r.name,
     tagline: r.tagline,
     cuisine: r.cuisine,

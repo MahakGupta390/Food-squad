@@ -1081,10 +1081,10 @@ function RestaurantsDirectoryView({ restaurants = [], activeRestaurantSlug, onSe
                 </div>
 
                 <div style={{ marginTop: 'var(--sp-4)', display: 'flex', gap: 8 }}>
-                  <button
+                                    <button
                     className={`btn btn-sm ${isSelected ? 'btn-primary' : 'btn-accent'}`}
                     style={{ width: '100%' }}
-                    onClick={() => onSelect(r.id)}
+                    onClick={() => onSelect(r.id || r.slug || r.code || r._id || r)}
                   >
                     {isSelected ? 'Active Session · View Room' : 'Start Squad Order'}
                   </button>
