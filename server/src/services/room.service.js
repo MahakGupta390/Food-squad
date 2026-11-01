@@ -24,13 +24,21 @@ const memberFor = (user, room) => ({
 });
 
 export async function createRoom(user, restaurant) {
-  const prefix = restaurant.code.split('-')[0];
+  // Safe prefix generation even if `code` is undefined in the database
+  const rawCode = String(restaurant?.code || restaurant?.slug || restaurant?.name || 'SQD').toUpperCase();
+  const cleanPrefix = rawCode.replace(/[^A-Z0-9]/g, '');
+  const prefix = (restaurant?.code && String(restaurant.code).includes('-')
+    ? String(restaurant.code).split('-')[0].toUpperCase()
+    : cleanPrefix.slice(0, 3)) || 'SQD';
+
+  const slug = String(restaurant?.slug || restaurant?.id || restaurant?._id || prefix.toLowerCase()).toLowerCase();
+
   for (let i = 0; i < 6; i++) {
     const code = `${prefix}-${crypto.randomInt(1000, 10000)}`;
     try {
       return await Room.create({
         code,
-        restaurantSlug: restaurant.slug,
+        restaurantSlug: slug,
         hostId: user._id,
         members: [memberFor(user, null)],
       });
